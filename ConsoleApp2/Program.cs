@@ -1,64 +1,41 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleApp1
+namespace ConsoleApp2
 {
     class Program
     {
-        const int COUNT = 3;
+        static int GasStationIndex(int[] gas, int[] cost)
+        {
+            int index = 0;
+            
+            int tGas = 0;
+            int tCost = 0;
+            int diff = 0;
+
+            for (int i = 0; i < gas.Length; ++i)
+            {
+                tGas += gas[i];
+                tCost += cost[i];
+
+                if (tGas < tCost)
+                {
+                    tGas = tCost = 0;
+                    index = i + 1;
+                }
+
+                diff += gas[i] - cost[i];
+            }
+
+            return diff >= 0 ? index : -1;
+        }
 
         static void Main(string[] args)
         {
-            // true - (, false - )            
-            var bracers = new BitArray(COUNT * 2);
-            for (int i = 0; i < COUNT * 2; i++)
-            {
-                bracers[i] = i < COUNT;
-            }
-
-            ProcessBracers(bracers);
-        }
-
-        private static void ProcessBracers(BitArray bracers)
-        {
-            ResortBracers(bracers, COUNT, 0, 0, 0);
-        }
-
-        private static void ResortBracers(BitArray bracers, int count, int pos, int opened, int closed)
-        {
-            if (closed == count)
-            {
-                PrintoutBracersBitArray(bracers);
-                return;
-            }
-            else
-            {
-                if (opened > closed)
-                {
-                    bracers[pos] = false;
-                    ResortBracers(bracers, count, pos + 1, opened, closed + 1);
-                }
-
-                if (opened < count)
-                {
-                    bracers[pos] = true;
-                    ResortBracers(bracers, count, pos + 1, opened + 1, closed);
-                }
-            }
-        }
-
-        static void PrintoutBracersBitArray(BitArray bracersBitArray)
-        {
-            foreach (var bit in bracersBitArray)
-            {
-                Console.Write((bool)bit ? "(" : ")");
-            }
-
-            Console.WriteLine();
+            Console.WriteLine(GasStationIndex(new int[] { 1, 2, 3, 4, 5 }, new int[] { 3, 4, 5, 1, 2 }));
         }
     }
 }
